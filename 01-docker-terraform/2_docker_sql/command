@@ -1,1 +1,33 @@
-docker run -it --name ny_taxi_postgres -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -e POSTGRES_DB=ny_taxi -p 5433:5432 -v ${PWD}/ny_taxi_postgres_data:/var/lib/postgresql/data postgres:13
+docker run -d --name pg-database --network pg-network -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -e POSTGRES_DB=ny_taxi -p 5433:5432 -v ${PWD}/ny_taxi_postgres_data:/var/lib/postgresql/data postgres:13
+
+
+
+
+
+URL="https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2021-01.parquet"
+
+python ingest-data.py \
+    --user=root \
+    --password=root \
+    --host=localhost \
+    --port=5433 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url="${URL}" \
+
+
+docker build -t taxi_ingest:v001 .
+
+URL="http://172.22.208.1:8000/yellow_tripdata_2021-01.parquet"
+
+docker run -it \
+    --name=ny_taxi_postgres \
+    --network=pg-network \
+    taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url="${URL}"
