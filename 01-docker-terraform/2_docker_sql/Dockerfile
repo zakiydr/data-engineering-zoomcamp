@@ -6,6 +6,8 @@ RUN pip install --no-cache-dir pandas sqlalchemy psycopg2-binary pyarrow
 
 WORKDIR /app
 
+# COPY ingest-data.py ingest-data.py 
 COPY ingest-data.py ingest-data.py 
 
+# ENTRYPOINT [ "python", "ingest-data.py" ]
 ENTRYPOINT [ "python", "ingest-data.py" ]

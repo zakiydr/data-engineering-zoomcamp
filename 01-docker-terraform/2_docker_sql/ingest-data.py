@@ -14,8 +14,6 @@ import pyarrow.parquet as pq
 
 
 def main(params):
-    table_name = "yellow_taxi_data"
-    parquet_filename = "yellow_tripdata_2021-01.parquet"
 
     user = params.user
     password = params.password
@@ -25,6 +23,8 @@ def main(params):
     table_name = params.table_name
     url = params.url
     
+    table_name = "green_taxi_data"
+    parquet_filename = url.split('/')[-1]
     os.system(f"curl -L {url} -o {parquet_filename}")
 
     engine = create_engine(f"postgresql://{user}:{password}@{host}:{port}/{db}")

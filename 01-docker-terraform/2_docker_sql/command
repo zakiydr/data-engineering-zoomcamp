@@ -9,19 +9,18 @@ URL="https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2021-01.par
 python ingest-data.py \
     --user=root \
     --password=root \
-    --host=localhost \
+    --host=pg-database \
     --port=5433 \
     --db=ny_taxi \
-    --table_name=yellow_taxi_trips \
+    --table_name=green_taxi_data \
     --url="${URL}" \
 
 
 docker build -t taxi_ingest:v001 .
 
-URL="http://172.22.208.1:8000/yellow_tripdata_2021-01.parquet"
-
+URL="https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2019-10.parquet" && \
 docker run -it \
-    --name=ny_taxi_postgres \
+    --name=green_taxi_postgres \
     --network=pg-network \
     taxi_ingest:v001 \
     --user=root \
@@ -29,5 +28,5 @@ docker run -it \
     --host=pg-database \
     --port=5432 \
     --db=ny_taxi \
-    --table_name=yellow_taxi_trips \
+    --table_name=green_taxi_trips \
     --url="${URL}"

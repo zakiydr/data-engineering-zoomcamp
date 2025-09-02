@@ -1,4 +1,6 @@
 .ipynb_checkpoints/
 ny_taxi_postgres_data/
 *.csv
-venv
+.venv
+command
+all_packages.txt
